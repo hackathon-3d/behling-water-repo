@@ -21,7 +21,7 @@
     
   </style>
 
-          <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&amp;libraries=places"></script>
+          <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
           <script src="https://hackathon-whosin.appspot.com/static/app.js"></script>
           <script>
             initialize_locations();
@@ -43,7 +43,7 @@
           $.post($this.attr('action'), $this.serialize(), function (responseData) {
 
               //in here you can analyze the output from your server-side script (responseData) and validate the user's login without leaving the page
-              alert("submitted " + $this.serialize());
+              //alert("submitted " + $this.serialize());
           });
       });
     });
@@ -111,7 +111,7 @@
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function(response) {
       console.log('Good to see you, ' + response.name + '.');
-      $("#fb_status").html("FB login: " + JSON.stringify(response));
+      //$("#fb_status").html("FB login: " + JSON.stringify(response));
       fb_data = response;
 
       $('#create_outing_form input[name=inviter_gender]').val(response.gender);
@@ -136,7 +136,7 @@
           </h5>
       </div>
       <div data-role="content">
-          <div id="googlemapsjs1" class="google-map" style="width: 288px; height: 435px; margin-left: auto; margin-right: auto">
+          <div id="googlemapsjs1" class="google-map" style="width: 288px; height: 300px; margin-left: auto; margin-right: auto">
           </div>
           <script type="text/javascript">
                   window.CodiqaControls && window.CodiqaControls.register('googlemaps', 'googlemapsjs1', {
@@ -175,13 +175,15 @@
   Learn more about options for the login button plugin:
   /docs/reference/plugins/login/ -->
 
-<fb:login-button show-faces="true" width="200" max-rows="1" onlogin="window.location.hash = 'page1'" autologoutlink="true" scope="email,user_relationships,user_location,user_about_me,user_birthday"></fb:login-button>
+<div style="background-color: #ccc; width: 210; margin-right: auto; margin-left: auto; text-align: center; margin-top: 0.5em; margin-bottom: 0.5em">
+<fb:login-button show-faces="true" width="200" max-rows="1" onlogin="window.location.hash = 'page1'" scope="email,user_relationships,user_location,user_about_me,user_birthday"></fb:login-button>
+</div>
 
           <!--<a data-role="button" data-inline="true" href="#page1">
               Google+
           </a>-->
-          <a href="#page1">Continue</a>
-          <div id="fb_status"></div>
+          <a data-role="button" href="#page1">Continue</a>
+          <!--<div id="fb_status"></div>-->
       </div>
   </div>
   <div data-role="page" data-control-title="Home" data-theme="a" id="page1">
@@ -448,7 +450,7 @@
           <div data-role="collapsible-set">
               <div data-role="collapsible">
                   <h3>
-                      Outing 1
+                      Rooftop Bar
                   </h3>
                   <div data-controltype="textblock">
                       <p>
@@ -460,7 +462,7 @@
               </div>
               <div data-role="collapsible">
                   <h3>
-                      Outing 2
+                      Yorktown
                   </h3>
                   <div data-controltype="textblock">
                       <p>
@@ -472,7 +474,7 @@
               </div>
               <div data-role="collapsible">
                   <h3>
-                      Outing 3
+                      Cinebarre
                   </h3>
                   <div data-controltype="textblock">
                       <p>
