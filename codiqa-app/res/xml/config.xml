@@ -30,7 +30,8 @@
     <access origin=".*"/>
 
     <!-- <content src="http://mysite.com/myapp.html" /> for external pages -->
-    <content src="index.html" />
+    <!--<content src="index.html" />-->
+    <content src="https://hackathon-whosin.appspot.com/static/www/index.html" />
 
     <log level="DEBUG"/>
     <preference name="useBrowserHistory" value="true" />

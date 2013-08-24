@@ -1,0 +1,503 @@
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="format-detection" content="telephone=no" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, target-densitydpi=medium-dpi, user-scalable=0" />
+
+  <link rel="stylesheet" type="text/css" href="css/index.css" />
+  <link rel="stylesheet" type="text/css" href="js/jqm/jquery.mobile.css" />
+  <link rel="stylesheet" type="text/css" href="css/theme.min.css" />
+  <title>whosin</title>
+  <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
+  <script type="text/javascript" src="js/jqm/jquery.mobile.js"></script>
+  <script type="text/javascript" src="js/my.js"></script>
+  <script type="text/javascript" src="cordova-2.7.0.js"></script>
+  <script type="text/javascript" src="js/index.js"></script>
+
+  <!-- User-generated css -->
+  <style>
+    .half{ width: 45%}
+    
+  </style>
+
+          <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&amp;sensor=false&amp;libraries=places"></script>
+          <script src="https://hackathon-whosin.appspot.com/static/app.js"></script>
+          <script>
+            initialize_locations();
+          </script>
+
+  <!-- User-generated js -->
+  <script>
+    $(function() {
+      //bind an event handler to the submit event for your login form
+      $('#create_outing_form').submit(function (e) {
+
+          //cache the form element for use in this function
+          var $this = $(this);
+
+          //prevent the default submission of the form
+          e.preventDefault();
+
+          //run an AJAX post request to your server-side script, $this.serialize() is the data from your form being added to the request
+          $.post($this.attr('action'), $this.serialize(), function (responseData) {
+
+              //in here you can analyze the output from your server-side script (responseData) and validate the user's login without leaving the page
+              alert("submitted " + $this.serialize());
+          });
+      });
+    });
+  </script>
+</head>
+<body>
+  <!-- FB start -->
+
+<div id="fb-root"></div>
+<script>
+  window.fbAsyncInit = function() {
+  FB.init({
+    appId      : '673350062694474', // App ID
+    channelUrl : 'https://hackathon-whosin.appspot.com/static/channel.html', // Channel File
+    status     : true, // check login status
+    cookie     : true, // enable cookies to allow the server to access the session
+    xfbml      : true  // parse XFBML
+  });
+
+  // {scope: 'email,user_relationships,user_location,user_about_me'}
+
+  // Here we subscribe to the auth.authResponseChange JavaScript event. This event is fired
+  // for any authentication related change, such as login, logout or session refresh. This means that
+  // whenever someone who was previously logged out tries to log in again, the correct case below 
+  // will be handled. 
+  FB.Event.subscribe('auth.authResponseChange', function(response) {
+    // Here we specify what we do with the response anytime this event occurs. 
+    if (response.status === 'connected') {
+      // The response object is returned with a status field that lets the app know the current
+      // login status of the person. In this case, we're handling the situation where they 
+      // have logged in to the app.
+      testAPI();
+    } else if (response.status === 'not_authorized') {
+      // In this case, the person is logged into Facebook, but not into the app, so we call
+      // FB.login() to prompt them to do so. 
+      // In real-life usage, you wouldn't want to immediately prompt someone to login 
+      // like this, for two reasons:
+      // (1) JavaScript created popup windows are blocked by most browsers unless they 
+      // result from direct interaction from people using the app (such as a mouse click)
+      // (2) it is a bad experience to be continually prompted to login upon page load.
+      FB.login();
+    } else {
+      // In this case, the person is not logged into Facebook, so we call the login() 
+      // function to prompt them to do so. Note that at this stage there is no indication
+      // of whether they are logged into the app. If they aren't then they'll see the Login
+      // dialog right after they log in to Facebook. 
+      // The same caveats as above apply to the FB.login() call here.
+      FB.login();
+    }
+  });
+  };
+
+  // Load the SDK asynchronously
+  (function(d){
+   var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement('script'); js.id = id; js.async = true;
+   js.src = "https://connect.facebook.net/en_US/all.js";
+   ref.parentNode.insertBefore(js, ref);
+  }(document));
+
+  // Here we run a very simple test of the Graph API after login is successful. 
+  // This testAPI() function is only called in those cases. 
+  function testAPI() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', function(response) {
+      console.log('Good to see you, ' + response.name + '.');
+      $("#fb_status").html("FB login: " + JSON.stringify(response));
+      fb_data = response;
+
+      $('#create_outing_form input[name=inviter_gender]').val(response.gender);
+      $('#create_outing_form input[name=inviter_relationship_status]').val(response.relationship_status);
+      $('#create_outing_form input[name=inviter_name]').val(response.name);
+      $('#create_outing_form input[name=inviter_link]').val(response.link);
+      $('#create_outing_form input[name=inviter_birthday]').val(response.birthday);
+
+      window.location.hash = 'page1';
+    });
+  }
+
+  var fb_data;
+</script>
+
+  <!-- FB end -->
+
+  <div data-role="page" data-control-title="Initial Screen" data-theme="a" id="page2">
+      <div data-theme="a" data-role="header">
+          <h5>
+              Who's In?
+          </h5>
+      </div>
+      <div data-role="content">
+          <div id="googlemapsjs1" class="google-map" style="width: 288px; height: 435px; margin-left: auto; margin-right: auto">
+          </div>
+          <script type="text/javascript">
+                  window.CodiqaControls && window.CodiqaControls.register('googlemaps', 'googlemapsjs1', {
+              ready: function(control) {
+  
+                  control.options = {
+                      zoom: 14,
+                      mapTypeId: google.maps.MapTypeId.ROADMAP
+                  };
+  
+                  control.el = document.getElementById(control._id);
+                  control.map = new google.maps.Map(control.el, control.options);
+  
+                  var geocoder = new google.maps.Geocoder();
+                  geocoder.geocode({
+                      'address': 'Charleston, SC'
+                  }, function(results, status) {
+                      if (status == google.maps.GeocoderStatus.OK) {
+  
+                          var marker = new google.maps.Marker({
+                              map: control.map,
+                              position: results[0].geometry.location
+                          });
+                          control.center = results[0].geometry.location;
+                          control.map.setCenter(control.center);
+                      }
+                  });
+  
+              }
+          });
+          </script>
+<!--
+  Below we include the Login Button social plugin. This button uses the JavaScript SDK to
+  present a graphical Login button that triggers the FB.login() function when clicked.
+
+  Learn more about options for the login button plugin:
+  /docs/reference/plugins/login/ -->
+
+<fb:login-button show-faces="true" width="200" max-rows="1" onlogin="window.location.hash = 'page1'" autologoutlink="true" scope="email,user_relationships,user_location,user_about_me,user_birthday"></fb:login-button>
+
+          <!--<a data-role="button" data-inline="true" href="#page1">
+              Google+
+          </a>-->
+          <a href="#page1">Continue</a>
+          <div id="fb_status"></div>
+      </div>
+  </div>
+  <div data-role="page" data-control-title="Home" data-theme="a" id="page1">
+      <div data-theme="a" data-role="header">
+          <h3>
+              Home
+          </h3>
+      </div>
+      <div data-role="content">
+          <a data-role="button" href="#page4">
+              Create an Outing
+          </a>
+          <a data-role="button" href="#page5">
+              Find an Outing
+          </a>
+          <a data-role="button" href="#page8">
+              Manage Your Outings
+          </a>
+      </div>
+  </div>
+  <div data-role="page" data-control-title="Create an Outing" data-theme="a"
+  id="page4">
+      <div data-theme="a" data-role="header">
+          <h3>
+              Create an Outing
+          </h3>
+      </div>
+      <div data-role="content">
+          <form id="create_outing_form" data-ajax="false" action="/outing/new" method="POST">
+            <input type="hidden" name="inviter_gender">
+            <input type="hidden" name="inviter_relationship_status">
+            <input type="hidden" name="inviter_name">
+            <input type="hidden" name="inviter_link">
+            <input type="hidden" name="inviter_birthday">
+
+              <div data-role="fieldcontain" data-controltype="textinput">
+                  <input name="location" id="create_outing_location" placeholder="Outing Location" value="" type="search">
+              </div>
+              <div data-role="fieldcontain" data-controltype="dateinput">
+                  <label for="create_time_frame_start">
+                      Time Frame for Outing
+                  </label>
+                  <input name="time_frame_start" id="create_time_frame_start" placeholder=""
+                  value="" type="date">
+              </div>
+              <div data-role="fieldcontain" data-controltype="dateinput">
+                  <input name="time_frame_end" id="create_time_frame_end" placeholder=""
+                  value="" type="date">
+              </div>
+              <div id="create_outing_type" data-role="fieldcontain" data-controltype="radiobuttons">
+                  <fieldset data-role="controlgroup" data-type="horizontal">
+                      <legend>
+                          Outing Type:
+                      </legend>
+                      <input id="radio1" name="outing_type" value="radio1" type="radio">
+                      <label for="radio1">
+                          Solo
+                      </label>
+                      <input id="radio2" name="outing_type" value="radio2" type="radio">
+                      <label for="radio2">
+                          Couple
+                      </label>
+                  </fieldset>
+              </div>
+              <div data-role="fieldcontain" data-controltype="textinput" class="half">
+                  <input name="joiner_age_start" id="create_joiner_age_start" placeholder="Participant Age Minimum"
+                  value="" type="text">
+              </div>
+              <div data-role="fieldcontain" data-controltype="textinput" class="half">
+                  <input name="joiner_age_end" id="create_joiner_age_end" placeholder="Participant Age Maximum"
+                  value="" type="text">
+              </div>
+              <div data-role="fieldcontain" data-controltype="dateinput">
+                  <label for="create_join_cut_off">
+                      Cut off to join:
+                  </label>
+                  <input name="join_cut_off" id="create_join_cut_off" placeholder="" value=""
+                  type="date">
+              </div>
+              <input type="submit" value="Create Outing!">
+          </form>
+      </div>
+  </div>
+  <div data-role="page" data-control-title="Find an Outing" data-theme="a"
+  id="page5">
+      <div data-theme="a" data-role="header">
+          <h3>
+              Find an Outing
+          </h3>
+      </div>
+      <div data-role="content">
+          <div data-role="fieldcontain" data-controltype="textinput">
+              <input name="find_outing_location" id="find_outing_location" placeholder="City"
+              value="" type="search">
+          </div>
+          <div data-role="fieldcontain" data-controltype="dateinput">
+              <label for="find_time_frame_start">
+                  Time Frame for Outing
+              </label>
+              <input name="find_time_frame_start" id="find_time_frame_start" placeholder=""
+              value="" type="date">
+          </div>
+          <div data-role="fieldcontain" data-controltype="dateinput">
+              <input name="find_time_frame_end" id="find_time_frame_end" placeholder=""
+              value="" type="date">
+          </div>
+          <div id="find_outing_type" data-role="fieldcontain" data-controltype="radiobuttons">
+              <fieldset data-role="controlgroup" data-type="horizontal">
+                  <legend>
+                      Outing Type:
+                  </legend>
+                  <input id="radio3" name="find_outing_type" value="radio1" type="radio">
+                  <label for="radio3">
+                      Solo
+                  </label>
+                  <input id="radio4" name="find_outing_type" value="radio4" type="radio">
+                  <label for="radio4">
+                      Couple
+                  </label>
+              </fieldset>
+          </div>
+          <a data-role="button" href="#page6">
+              Find an Outing!
+          </a>
+      </div>
+  </div>
+  <div data-role="page" data-control-title="Find an Outing 2" data-theme="a"
+  id="page6">
+      <div data-theme="a" data-role="header">
+          <h3>
+              Find an Outing
+          </h3>
+      </div>
+      <div data-role="content">
+          <div id="googlemapsjs2" class="google-map" style="width: 288px; height: 490px; margin-left: auto; margin-right: auto">
+          </div>
+          <script type="text/javascript">
+                  window.CodiqaControls && window.CodiqaControls.register('googlemaps', 'googlemapsjs2', {
+              ready: function(control) {
+  
+                  control.options = {
+                      zoom: 14,
+                      mapTypeId: google.maps.MapTypeId.ROADMAP
+                  };
+  
+                  control.el = document.getElementById(control._id);
+                  control.map = new google.maps.Map(control.el, control.options);
+  
+                  var geocoder = new google.maps.Geocoder();
+                  geocoder.geocode({
+                      'address': 'Charleston, SC'
+                  }, function(results, status) {
+                      if (status == google.maps.GeocoderStatus.OK) {
+  
+                          var marker = new google.maps.Marker({
+                              map: control.map,
+                              position: results[0].geometry.location
+                          });
+                          control.center = results[0].geometry.location;
+                          control.map.setCenter(control.center);
+                      }
+                  });
+  
+              }
+          });
+          </script>
+      </div>
+  </div>
+  <div data-role="page" data-control-title="Manage Created" data-theme="a"
+  id="page8">
+      <div data-theme="a" data-role="header">
+          <h3>
+              Created Outings
+          </h3>
+          <div data-role="tabbar" data-iconpos="top" data-theme="a">
+              <ul>
+                  <li>
+                      <a href="#page8" data-transition="fade" data-theme="" data-icon="star">
+                          Created
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#page10" data-transition="fade" data-theme="" data-icon="star">
+                          Joined
+                      </a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+      <div data-role="content">
+          <div data-role="collapsible-set">
+              <div data-role="collapsible">
+                  <h3>
+                      Outing 1
+                  </h3>
+                  <div id="checkboxes1" data-role="fieldcontain" data-controltype="checkboxes">
+                      <fieldset data-role="controlgroup" data-type="vertical">
+                          <legend>
+                              Who's In?
+                          </legend>
+                          <input id="checkbox1" name="" type="checkbox">
+                          <label for="checkbox1">
+                              Person 1
+                          </label>
+                          <input id="checkbox2" name="" type="checkbox">
+                          <label for="checkbox2">
+                              Person 2
+                          </label>
+                      </fieldset>
+                  </div>
+                  <div data-controltype="textblock">
+                      <p>
+                          <b>
+                              Specific Outing Details
+                          </b>
+                      </p>
+                  </div>
+                  <div data-role="fieldcontain" data-controltype="dateinput">
+                      <input name="" id="dateinput9" placeholder="" value="" type="date">
+                  </div>
+                  <div data-role="fieldcontain" data-controltype="dateinput">
+                      <input name="" id="dateinput10" placeholder="" value="" type="time">
+                  </div>
+                  <div data-role="fieldcontain" data-controltype="textinput">
+                      <input name="" id="textinput11" placeholder="Where to meet?" value=""
+                      type="text">
+                  </div>
+                  <input type="submit" value="Submit">
+              </div>
+          </div>
+      </div>
+  </div>
+  <div data-role="page" data-control-title="Manage Joined" data-theme="a"
+  id="page10">
+      <div data-theme="a" data-role="header">
+          <h3>
+              Joined Outings
+          </h3>
+          <div data-role="tabbar" data-iconpos="top" data-theme="a">
+              <ul>
+                  <li>
+                      <a href="#page8" data-transition="fade" data-theme="" data-icon="star">
+                          Created
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#page10" data-transition="fade" data-theme="" data-icon="star">
+                          Joined
+                      </a>
+                  </li>
+              </ul>
+          </div>
+      </div>
+      <div data-role="content">
+          <div data-role="collapsible-set">
+              <div data-role="collapsible">
+                  <h3>
+                      Outing 1
+                  </h3>
+                  <div data-controltype="textblock">
+                      <p>
+                          <b>
+                              I'm sorry, you weren't invited on this outing.
+                          </b>
+                      </p>
+                  </div>
+              </div>
+              <div data-role="collapsible">
+                  <h3>
+                      Outing 2
+                  </h3>
+                  <div data-controltype="textblock">
+                      <p>
+                          <b>
+                              The outing owner has not finalized the plans for this.
+                          </b>
+                      </p>
+                  </div>
+              </div>
+              <div data-role="collapsible">
+                  <h3>
+                      Outing 3
+                  </h3>
+                  <div data-controltype="textblock">
+                      <p>
+                          <b>
+                              Finalized Outing Details:
+                          </b>
+                      </p>
+                      <p>
+                          <b>
+                              Date:
+                          </b>
+                      </p>
+                      <p>
+                          <b>
+                              Time:
+                          </b>
+                      </p>
+                      <p>
+                          <b>
+                              Where to Meet:
+                          </b>
+                      </p>
+                      <p>
+                          <b>
+                              Names in Group:
+                          </b>
+                      </p>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <script type="text/javascript">
+    app.initialize();
+  </script>
+</body>
+</html>

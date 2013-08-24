@@ -1,0 +1,28 @@
+As a user, I can click the Facebook button and get my personal attributes into JS variables
+  So that I can create and join outings
+
+  - Frontend tasks:
+    - Facebook JS login
+  - Backend needs: 
+    none
+
+As an inviter, I can craete an outing
+  So that I can invite people
+
+  - Frontend tasks:
+    - Create form submits to server
+  - Backend needs: 
+    - Server create outing in Datastore
+
+As a joiner, I can see outings on the map and click them to join
+	So that I can join an outing
+
+  - Frontend needs:
+    - can view outings on a map
+    - can click outings & view outing details
+    - can submit 
+  - Backend needs:
+    - list all outings
+    - update an outing to add joiner
+
+As an inviter, I can manage my outings to accept people's invitations and fill in the details of where to meet
