@@ -1,7 +1,7 @@
 /Users/tednew/Code/whosin/codiqa-app/bin/whosin.ap_ \
  : /Users/tednew/Code/whosin/codiqa-app/res/drawable/icon.png \
 /Users/tednew/Code/whosin/codiqa-app/res/drawable-hdpi/ic_launcher.png \
-/Users/tednew/Code/whosin/codiqa-app/res/drawable-hdpi/logo.png \
+/Users/tednew/Code/whosin/codiqa-app/res/drawable-hdpi/icon.png \
 /Users/tednew/Code/whosin/codiqa-app/res/drawable-ldpi/ic_launcher.png \
 /Users/tednew/Code/whosin/codiqa-app/res/drawable-ldpi/icon.png \
 /Users/tednew/Code/whosin/codiqa-app/res/drawable-mdpi/ic_launcher.png \
@@ -13,7 +13,7 @@
 /Users/tednew/Code/whosin/codiqa-app/res/xml/config.xml \
 /Users/tednew/Code/whosin/codiqa-app/bin/res/drawable/icon.png \
 /Users/tednew/Code/whosin/codiqa-app/bin/res/drawable-hdpi/ic_launcher.png \
-/Users/tednew/Code/whosin/codiqa-app/bin/res/drawable-hdpi/logo.png \
+/Users/tednew/Code/whosin/codiqa-app/bin/res/drawable-hdpi/icon.png \
 /Users/tednew/Code/whosin/codiqa-app/bin/res/drawable-ldpi/ic_launcher.png \
 /Users/tednew/Code/whosin/codiqa-app/bin/res/drawable-ldpi/icon.png \
 /Users/tednew/Code/whosin/codiqa-app/bin/res/drawable-mdpi/ic_launcher.png \
